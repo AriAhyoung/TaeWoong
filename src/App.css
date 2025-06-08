@@ -1,38 +1,138 @@
-.App {
-  text-align: center;
-}
+/* Delete your old header styles and replace them with this in App.css */
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.top-section {
+  background: white;
+  padding: 15px;
+  border-bottom: 1px solid #eee;
   display: flex;
   flex-direction: column;
+  gap: 15px; /* Adds space between the main controls and the toggles */
+}
+
+.main-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Adds space between items */
+}
+
+.input-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 10px; /* Space between the two input fields */
+  flex-grow: 1; /* Allows this section to take up available space */
+}
+
+.input-group {
+  display: flex;
+  align-items: center;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 8px 10px;
+  background: #f9f9f9;
+}
+
+.input-group .icon {
+  margin-right: 8px;
+  font-size: 0.8em;
+}
+
+.input-group .start-icon {
+  color: #2ecc71;
+}
+.input-group .dest-icon {
+  color: #e74c3c;
+}
+
+.input-group input {
+  border: none;
+  outline: none;
+  background: none;
+  width: 100%;
+  font-size: 1em;
+}
+
+.swap-button {
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 50%;
+  width: 34px;
+  height: 34px;
+  cursor: pointer;
+  font-size: 1em;
+  color: #333;
+  display: flex;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
+  padding: 0;
+  flex-shrink: 0; /* Prevents the button from shrinking */
+}
+
+.action-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.reset-button,
+.find-route-button {
+  border: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  white-space: nowrap; /* Prevents text from wrapping */
+}
+
+.reset-button {
+  background-color: #f0f2f5;
+  color: #555;
+}
+
+.find-route-button {
+  background-color: #4a69bd;
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
+.route-options-toggle {
+  display: flex;
+  justify-content: space-around;
+  gap: 10px; /* Adds space between the toggle buttons */
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.route-options-toggle button {
+  flex-grow: 1; /* Makes all buttons take equal width */
+  background: #f0f2f5;
+  border: 1px solid transparent; /* Keeps size consistent with active state */
+  border-radius: 10px;
+  padding: 8px 10px;
+  cursor: pointer;
+  text-align: center;
+  transition: background-color 0.2s;
+}
+
+.route-options-toggle button strong {
+  font-size: 0.9em;
+  color: #333;
+}
+
+.route-options-toggle button span {
+  display: block;
+  font-size: 0.7em;
+  color: #888;
+  margin-top: 3px;
+}
+
+.route-options-toggle button.active {
+  background-color: #4a69bd;
+  border-color: #4a69bd;
+}
+
+.route-options-toggle button.active strong,
+.route-options-toggle button.active span {
+  color: white;
+}
+
+/* Make sure you have these body/root styles for consistency */
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  margin: 0;
 }
