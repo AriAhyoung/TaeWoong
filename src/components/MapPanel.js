@@ -1,74 +1,78 @@
 // src/components/MapPanel.js
-import React, { useEffect } from "react"; // Ensure React and useEffect are imported
-import { MapContainer, TileLayer, Polyline, useMap } from "react-leaflet"; // Remove Marker if you don't need it or uncomment the Marker JSX later
-import "leaflet/dist/leaflet.css";
+
+import React, { useEffect } from "react";
+import { MapContainer, TileLayer, Polyline, Marker, useMap } from "react-leaflet";
 import L from "leaflet";
-import "../App.css";
-// ... rest of your MapPanel.js code
+
+// Fix for default marker icon issue
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
-  iconRetinaUrl:
-    "[https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon-2x.png](https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon-2x.png)",
-  iconUrl: "[https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png](https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png)",
-  shadowUrl:
-    "[https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png](https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png)",
+  iconRetinaUrl: require("leaflet/dist/images/marker-icon-2x.png"),
+  iconUrl: require("leaflet/dist/images/marker-icon.png"),
+  shadowUrl: require("leaflet/dist/images/marker-shadow.png"),
 });
 
-// A helper component to update map view when selectedRoute changes
-function ChangeView({ center, zoom, polyline }) {
+// This helper component now controls map view changes and fixes the rendering bug.
+function MapController({ bounds }) {
   const map = useMap();
+
   useEffect(() => {
-    if (polyline && polyline.length > 0) {
-      // Fit bounds to the polyline whenever it changes
-      map.fitBounds(polyline);
-    } else {
-      map.setView(center, zoom); // Or reset to default view
+    if (bounds) {
+      map.fitBounds(bounds, { padding: [50, 50] }); // Fit bounds with padding
+
+      // THIS IS THE FIX:
+      // Give the map a moment to adjust to the new layout, then
+      // tell it to re-check its size. This forces it to render the map tiles.
+      const timer = setTimeout(() => {
+        map.invalidateSize();
+      }, 100);
+
+      // Cleanup the timer
+      return () => clearTimeout(timer);
     }
-  }, [center, zoom, polyline, map]);
+  }, [map, bounds]); // Rerun when map or bounds change
+
   return null;
 }
 
 function MapPanel({ selectedRoute }) {
-  const defaultCenter = [37.5665, 126.978]; // Center on Seoul
-  const defaultZoom = 13;
+  const defaultCenter = [37.5665, 126.978]; // Seoul City Hall
 
-  // Extract polyline for the selected route
-  const routePolyline = selectedRoute ? selectedRoute.polyline : [];
+  if (!selectedRoute || !selectedRoute.polyline || selectedRoute.polyline.length === 0) {
+    return (
+      <section className="map-panel placeholder">
+        <p>경로를 선택하면 여기에 지도가 표시됩니다.</p>
+      </section>
+    );
+  }
+
+  const polyline = selectedRoute.polyline;
+  const bounds = L.latLngBounds(polyline);
+
+  const startMarker = polyline[0];
+  const endMarker = polyline[polyline.length - 1];
 
   return (
-    <div id="map-container" className="right-map-panel">
+    <section className="map-panel">
       <MapContainer
         center={defaultCenter}
-        zoom={defaultZoom}
-        scrollWheelZoom={true}
-        style={{ height: "100%", width: "100%" }} // Map takes full container size
+        zoom={12}
+        style={{ height: "100%", width: "100%" }}
+        scrollWheelZoom={false} // Optional: disable zoom on scroll
       >
         <TileLayer
-          attribution='&copy; <a href="[https://www.openstreetmap.org/copyright](https://www.openstreetmap.org/copyright)">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         />
 
-        {/* Component to update map view when data changes */}
-        <ChangeView center={defaultCenter} zoom={defaultZoom} polyline={routePolyline} />
+        <Polyline pathOptions={{ color: "#4a69bd", weight: 5 }} positions={polyline} />
 
-        {routePolyline.length > 0 && (
-          <Polyline
-            positions={routePolyline}
-            color="#4285F4" // Blue color for the route line
-            weight={5}
-            opacity={0.8}
-          />
-        )}
+        {startMarker && <Marker position={startMarker}></Marker>}
+        {endMarker && <Marker position={endMarker}></Marker>}
 
-        {/* You might add start/end markers here based on selectedRoute */}
-        {/* {selectedRoute && selectedRoute.startMarker && (
-                    <Marker position={selectedRoute.startMarker} />
-                )}
-                {selectedRoute && selectedRoute.endMarker && (
-                    <Marker position={selectedRoute.endMarker} />
-                )} */}
+        <MapController bounds={bounds} />
       </MapContainer>
-    </div>
+    </section>
   );
 }
 

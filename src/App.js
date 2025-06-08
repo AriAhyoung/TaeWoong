@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import "./App.css";
-
+import DetailedPathView from "./components/DetailedPathView";
 import Header from "./components/Header";
 import ResultsPanel from "./components/ResultsPanel";
 import MapPanel from "./components/MapPanel";
@@ -27,7 +27,7 @@ function App() {
       console.log(`Searching for routes from ${startPoint} to ${destinationPoint}`);
 
       // --- IMPORTANT: PASTE YOUR NGROK URL HERE ---
-      const backendUrl = "https://8a3c-121-135-181-72.ngrok-free.app";
+      const backendUrl = "https://2133-121-135-181-72.ngrok-free.app";
 
       try {
         const response = await fetch(`${backendUrl}/api/find-routes`, {
@@ -47,7 +47,8 @@ function App() {
         }
 
         const fetchedRoutes = await response.json();
-
+        console.log("--- DATA RECEIVED FROM BACKEND ---");
+        console.log(JSON.stringify(fetchedRoutes, null, 2));
         if (fetchedRoutes && fetchedRoutes.length > 0) {
           setRouteOptions(fetchedRoutes);
           setSelectedRouteId(fetchedRoutes[0].id);
@@ -114,6 +115,7 @@ function App() {
           currentSelectedRoute={currentSelectedRoute}
         />
         <MapPanel selectedRoute={currentSelectedRoute} />
+        <DetailedPathView selectedRoute={currentSelectedRoute} />
       </main>
     </div>
   );

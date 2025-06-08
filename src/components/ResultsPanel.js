@@ -1,10 +1,10 @@
+// src/components/ResultsPanel.js
+
 import React from "react";
 import RouteSummaryCard from "./RouteSummaryCard";
-// DetailedRouteView can be used later
-// import DetailedRouteView from './DetailedRouteView';
 
-function ResultsPanel({ routeOptions, startPoint, destinationPoint }) {
-  // If there are no routes, show a message
+// Update props to accept selectedRouteId and onRouteSelect
+function ResultsPanel({ routeOptions, startPoint, destinationPoint, selectedRouteId, onRouteSelect }) {
   if (!routeOptions || routeOptions.length === 0) {
     return (
       <aside className="results-panel">
@@ -25,7 +25,10 @@ function ResultsPanel({ routeOptions, startPoint, destinationPoint }) {
           <RouteSummaryCard
             key={route.id}
             route={route}
-            rank={index + 1} // Assign rank based on order
+            rank={index + 1}
+            // Pass the selection handler and check if this card is the selected one
+            onRouteSelect={onRouteSelect}
+            isSelected={selectedRouteId === route.id}
           />
         ))}
       </div>

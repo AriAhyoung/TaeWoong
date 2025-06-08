@@ -1,25 +1,46 @@
-/* Delete your old header styles and replace them with this in App.css */
+/* Replace everything in App.css with this */
 
+/* --- CRITICAL FIX: Ensure all parent containers have full height --- */
+html,
+body,
+#root,
+.app-container {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+}
+/* --- END OF CRITICAL FIX --- */
+
+/* --- Header Styles --- */
 .top-section {
   background: white;
   padding: 15px;
   border-bottom: 1px solid #eee;
   display: flex;
   flex-direction: column;
-  gap: 15px; /* Adds space between the main controls and the toggles */
+  gap: 15px;
 }
 
 .main-controls {
   display: flex;
   align-items: center;
-  gap: 10px; /* Adds space between items */
+  gap: 10px;
 }
 
 .input-fields {
   display: flex;
   flex-direction: column;
-  gap: 10px; /* Space between the two input fields */
-  flex-grow: 1; /* Allows this section to take up available space */
+  gap: 10px;
+  flex-grow: 1;
 }
 
 .input-group {
@@ -64,7 +85,7 @@
   align-items: center;
   justify-content: center;
   padding: 0;
-  flex-shrink: 0; /* Prevents the button from shrinking */
+  flex-shrink: 0;
 }
 
 .action-buttons {
@@ -79,7 +100,7 @@
   border-radius: 8px;
   cursor: pointer;
   font-weight: bold;
-  white-space: nowrap; /* Prevents text from wrapping */
+  white-space: nowrap;
 }
 
 .reset-button {
@@ -95,13 +116,13 @@
 .route-options-toggle {
   display: flex;
   justify-content: space-around;
-  gap: 10px; /* Adds space between the toggle buttons */
+  gap: 10px;
 }
 
 .route-options-toggle button {
-  flex-grow: 1; /* Makes all buttons take equal width */
+  flex-grow: 1;
   background: #f0f2f5;
-  border: 1px solid transparent; /* Keeps size consistent with active state */
+  border: 1px solid transparent;
   border-radius: 10px;
   padding: 8px 10px;
   cursor: pointer;
@@ -131,8 +152,227 @@
   color: white;
 }
 
-/* Make sure you have these body/root styles for consistency */
-body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+/* --- Main Content Area Styles --- */
+.main-content-area {
+  display: grid;
+  grid-template-columns: 350px 1fr 300px;
+  flex-grow: 1;
+  /* We remove the fixed calc() height from here because the parent now controls the height */
+  overflow: hidden; /* Prevents scrollbars on the main container */
+}
+
+/* --- Results Panel & Card Styles --- */
+.results-panel {
+  background-color: #f7f9fc;
+  padding: 15px;
+  overflow-y: auto;
+  border-right: 1px solid #e0e6ed;
+}
+
+.results-header h3 {
+  margin: 0 0 15px 0;
+  font-size: 1.2em;
+}
+
+.routes-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.results-placeholder {
+  color: #868e96;
+  text-align: center;
+  margin-top: 50px;
+}
+
+.route-summary-card {
+  display: flex;
+  background-color: white;
+  border-radius: 12px;
+  border: 1px solid #e0e6ed;
+  padding: 15px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.card-rank {
+  margin-right: 15px;
+}
+
+.rank-circle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: #e0e6ed;
+  font-weight: bold;
+  font-size: 1.1em;
+}
+
+.card-content {
+  width: 100%;
+}
+
+.card-main-info {
+  margin-bottom: 15px;
+}
+
+.total-time {
+  font-size: 1.5em;
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.meta-info {
+  font-size: 0.9em;
+  color: #666;
+}
+
+.route-segments {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #f0f2f5;
+  gap: 8px 0;
+}
+
+.segment-item {
+  display: flex;
+  align-items: center;
+  margin-right: 8px;
+  font-size: 0.9em;
+}
+
+.segment-item.type-transfer {
+  color: #888;
+  font-size: 1.5em;
+}
+
+.segment-icon {
+  margin-right: 4px;
+}
+
+/* Subway Line Colors */
+.segment-icon.line-2 {
+  color: #00a84d;
+}
+.segment-icon.line-3 {
+  color: #ef7c1c;
+}
+.segment-icon.line-4 {
+  color: #00a4e3;
+}
+.segment-icon.line-5 {
+  color: #996cac;
+}
+.segment-icon.line-6 {
+  color: #cd7c2f;
+} /* Add other lines as needed */
+
+.card-footer {
+  margin-top: 15px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.details-button,
+.share-button {
+  background-color: #f0f2f5;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 0.8em;
+}
+
+/* --- Map Panel Styles --- */
+.map-panel {
+  /* No height needed here anymore as the grid parent manages it */
+  position: relative;
+}
+
+.map-panel.placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #e9ecef;
+  color: #868e96;
+  font-size: 1.2em;
+  text-align: center;
+}
+
+.leaflet-container {
+  height: 100%;
+  width: 100%;
+}
+
+/* --- Detailed Path View Styles --- */
+.detailed-path-view {
+  background-color: #fff;
+  padding: 15px;
+  overflow-y: auto;
+  border-left: 1px solid #e0e6ed;
+}
+
+.detailed-path-view.empty {
+  background-color: #f7f9fc;
+}
+
+.detailed-path-view h4 {
+  margin-top: 0;
+  margin-bottom: 20px;
+}
+
+.detailed-path-view ul {
+  list-style-type: none;
+  padding: 0;
   margin: 0;
+}
+
+.path-segment-item {
+  display: flex;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #f0f2f5;
+}
+
+.path-segment-icon {
+  font-size: 1.5em;
+  width: 40px;
+  text-align: center;
+  margin-right: 10px;
+}
+
+.path-segment-item.type-transfer .path-segment-icon {
+  color: #888;
+}
+
+/* Subway Line Colors in Detail View*/
+.path-segment-icon.line-2 {
+  color: #00a84d;
+}
+.path-segment-icon.line-3 {
+  color: #ef7c1c;
+}
+.path-segment-icon.line-4 {
+  color: #00a4e3;
+}
+.path-segment-icon.line-5 {
+  color: #996cac;
+}
+.path-segment-icon.line-6 {
+  color: #cd7c2f;
+}
+
+.path-segment-detail {
+  font-size: 0.9em;
+}
+
+.route-summary-card.selected {
+  border: 2px solid #4a69bd;
+  box-shadow: 0 4px 12px rgba(74, 105, 189, 0.2);
 }

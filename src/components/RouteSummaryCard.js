@@ -1,21 +1,27 @@
+// src/components/RouteSummaryCard.js
+
 import React from "react";
 
-// A helper function to get the right icon based on segment type
 const getSegmentIcon = (type) => {
-  if (type === "walk") return "🚶"; // Walking person emoji
-  if (type === "subway") return "🚇"; // Subway emoji
-  if (type === "bus") return "🚌"; // Bus emoji
-  if (type === "transfer") return "›"; // Arrow for transfer
+  if (type === "walk") return "🚶";
+  if (type === "subway") return "🚇";
+  if (type === "bus") return "🚌";
+  if (type === "transfer") return "→";
   return "●";
 };
 
-function RouteSummaryCard({ route, rank }) {
+// The component now accepts onRouteSelect and isSelected
+function RouteSummaryCard({ route, rank, onRouteSelect, isSelected }) {
   if (!route) {
     return null;
   }
 
+  // Conditionally set the class name
+  const cardClassName = `route-summary-card ${isSelected ? "selected" : ""}`;
+
   return (
-    <div className="route-summary-card">
+    // Add the onClick handler to the main div
+    <div className={cardClassName} onClick={() => onRouteSelect(route.id)}>
       <div className="card-rank">
         <span className="rank-circle">{rank}</span>
       </div>
@@ -27,12 +33,13 @@ function RouteSummaryCard({ route, rank }) {
           </span>
         </div>
         <div className="route-segments">
-          {route.segments.map((segment, index) => (
-            <div key={index} className={`segment-item type-${segment.type}`}>
-              <span className={`segment-icon line-${segment.line}`}>{getSegmentIcon(segment.type)}</span>
-              <span className="segment-detail">{segment.detail}</span>
-            </div>
-          ))}
+          {route.segments &&
+            route.segments.map((segment, index) => (
+              <div key={index} className={`segment-item type-${segment.type}`}>
+                <span className={`segment-icon line-${segment.line}`}>{getSegmentIcon(segment.type)}</span>
+                <span className="segment-detail">{segment.detail}</span>
+              </div>
+            ))}
         </div>
         <div className="card-footer">
           <button className="details-button">경로 상세</button>
