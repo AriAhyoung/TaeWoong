@@ -1,5 +1,3 @@
-// Replace everything in Header.js with this code
-
 import React from "react";
 import "../App.css"; // For shared styles
 
@@ -25,6 +23,7 @@ function Header({
   return (
     <header className="top-section">
       <div className="main-controls">
+        {/* Input fields will stay on the left */}
         <div className="input-fields">
           <div className="input-group">
             <span className="icon start-icon">●</span>
@@ -35,21 +34,9 @@ function Header({
             <input type="text" placeholder="도착지" value={destinationPoint} onChange={(e) => setDestinationPoint(e.target.value)} />
           </div>
         </div>
-        <button onClick={onReverse} className="swap-button" title="Swap start and destination">
-          ↑↓
-        </button>
-        <div className="checkbox-options">
-          <label>
-            <input type="checkbox" checked={hasRestroom} onChange={(e) => setHasRestroom(e.target.checked)} />
-            화장실
-          </label>
-          <label>
-            <input type="checkbox" checked={hasElevator} onChange={(e) => setHasElevator(e.target.checked)} />
-            엘리베이터
-          </label>
-        </div>
 
-        <div className="action-buttons">
+        {/* This new container groups all controls on the right */}
+        <div className="right-controls">
           <div className="checkbox-options">
             <label>
               <input type="checkbox" checked={hasRestroom} onChange={(e) => setHasRestroom(e.target.checked)} />
@@ -61,12 +48,17 @@ function Header({
             </label>
           </div>
 
-          <button onClick={handleReset} className="reset-button">
-            다시입력
-          </button>
-          <button onClick={onFindRoute} className="find-route-button">
-            길찾기
-          </button>
+          <div className="action-buttons">
+            <button className="swap-button" onClick={onReverse} title="Swap start and destination">
+              ↑↓
+            </button>
+            <button onClick={handleReset} className="reset-button">
+              다시입력
+            </button>
+            <button onClick={onFindRoute} className="find-route-button">
+              길찾기
+            </button>
+          </div>
         </div>
       </div>
 
@@ -96,7 +88,7 @@ function Header({
         </button>
         <button className={routePreference === "comfort" ? "active" : ""} onClick={() => setRoutePreference("comfort")}>
           <strong>쾌적도 순</strong>
-          <span>날씨 반영, 쾌적, 청결도 높은 경로</span>
+          <span>날씨 반영, 쾌적, 청결도 높은 경로 추천</span>
         </button>
       </div>
     </header>

@@ -29,7 +29,7 @@ function App() {
       console.log(`Searching for routes from ${startPoint} to ${destinationPoint}`);
 
       // --- IMPORTANT: PASTE YOUR NGROK URL HERE ---
-      const backendUrl = "https://2133-121-135-181-72.ngrok-free.app";
+      const backendUrl = "https://e545-211-55-12-221.ngrok-free.app";
 
       try {
         const response = await fetch(`${backendUrl}/api/find-routes`, {
