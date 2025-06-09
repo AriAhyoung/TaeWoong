@@ -114,9 +114,9 @@ body {
 }
 
 .route-options-toggle {
-  display: flex;
-  justify-content: space-around;
-  gap: 10px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* This creates a 3-column grid */
+  gap: 10px; /* This adds space between the buttons */
 }
 
 .route-options-toggle button {

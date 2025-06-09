@@ -9,6 +9,8 @@ import MapPanel from "./components/MapPanel";
 
 function App() {
   // --- State Variables ---
+  const [hasRestroom, setHasRestroom] = useState(false); // State for "화장실"
+  const [hasElevator, setHasElevator] = useState(false); // State for "엘리베이터"
   const [startPoint, setStartPoint] = useState("");
   const [destinationPoint, setDestinationPoint] = useState("");
   const [routeOptions, setRouteOptions] = useState([]); // Array of 3 route objects
@@ -39,6 +41,8 @@ function App() {
             startPoint: startPoint,
             destinationPoint: destinationPoint,
             preference: routePreference,
+            hasRestroom: hasRestroom, // Add restroom preference
+            hasElevator: hasElevator, // Add elevator preference
           }),
         });
 
@@ -99,6 +103,10 @@ function App() {
         onReverse={handleReverse}
         routePreference={routePreference}
         setRoutePreference={setRoutePreference}
+        hasRestroom={hasRestroom}
+        setHasRestroom={setHasRestroom}
+        hasElevator={hasElevator}
+        setHasElevator={setHasElevator}
       />
 
       {/* --- CHANGE 3: ADD THE LOADING INDICATOR HERE --- */}
