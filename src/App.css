@@ -407,7 +407,3 @@ body {
   display: flex;
   gap: 10px;
 }
-
-.leaflet-marker-red .leaflet-marker-icon {
-  filter: hue-rotate(280deg);
-}

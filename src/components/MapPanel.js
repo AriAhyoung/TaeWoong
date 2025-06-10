@@ -10,21 +10,12 @@ L.Icon.Default.mergeOptions({
 });
 
 const transferIcon = new L.Icon({
-  // Use the same image files as the default marker
-  iconUrl: require("leaflet/dist/images/marker-icon.png"),
-  iconRetinaUrl: require("leaflet/dist/images/marker-icon-2x.png"),
-  shadowUrl: require("leaflet/dist/images/marker-shadow.png"),
-
-  // Set a smaller size (default is [25, 41])
-  iconSize: [18, 29],
-
-  // Adjust the anchor points accordingly
-  iconAnchor: [9, 29],
+  iconUrl: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png",
+  shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png",
+  iconSize: [18, 25], // We can use the standard size for better visibility
+  iconAnchor: [6, 25],
   popupAnchor: [1, -34],
-  shadowSize: [29, 29],
-
-  // Add a custom class name that we can target with CSS
-  className: "leaflet-marker-red",
+  shadowSize: [41, 41],
 });
 
 // Helper component to auto-center the map
