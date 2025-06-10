@@ -9,11 +9,22 @@ L.Icon.Default.mergeOptions({
   shadowUrl: require("leaflet/dist/images/marker-shadow.png"),
 });
 
-// Create a custom icon for transfer points
 const transferIcon = new L.Icon({
-  iconUrl: "https://cdn-icons-png.flaticon.com/512/3580/3580438.png", // A simple circle icon
-  iconSize: [15, 15], // Size of the icon
-  className: "transfer-marker-icon",
+  // Use the same image files as the default marker
+  iconUrl: require("leaflet/dist/images/marker-icon.png"),
+  iconRetinaUrl: require("leaflet/dist/images/marker-icon-2x.png"),
+  shadowUrl: require("leaflet/dist/images/marker-shadow.png"),
+
+  // Set a smaller size (default is [25, 41])
+  iconSize: [18, 29],
+
+  // Adjust the anchor points accordingly
+  iconAnchor: [9, 29],
+  popupAnchor: [1, -34],
+  shadowSize: [29, 29],
+
+  // Add a custom class name that we can target with CSS
+  className: "leaflet-marker-red",
 });
 
 // Helper component to auto-center the map
