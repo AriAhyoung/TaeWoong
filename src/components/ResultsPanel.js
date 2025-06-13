@@ -1,8 +1,7 @@
 import React from "react";
 import RouteSummaryCard from "./RouteSummaryCard";
 
-// This component must accept `routePreference` and pass it to the card
-function ResultsPanel({ routeOptions, startPoint, destinationPoint, selectedRouteId, onRouteSelect, routePreference }) {
+function ResultsPanel({ routeOptions, startPoint, destinationPoint, selectedRouteId, onRouteSelect }) {
   if (!routeOptions || routeOptions.length === 0) {
     return (
       <aside className="results-panel">
@@ -26,8 +25,6 @@ function ResultsPanel({ routeOptions, startPoint, destinationPoint, selectedRout
             rank={index + 1}
             onRouteSelect={onRouteSelect}
             isSelected={selectedRouteId === route.id}
-            // This passes the selected preference down to the card
-            routePreference={routePreference}
           />
         ))}
       </div>
