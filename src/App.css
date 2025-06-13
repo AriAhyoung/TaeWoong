@@ -407,3 +407,41 @@ body {
   display: flex;
   gap: 10px;
 }
+
+/* Add these new styles to your existing App.css file */
+
+.main-score-display {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 4px;
+}
+
+.score-label {
+  font-size: 0.9em;
+  color: #555;
+  font-weight: bold;
+}
+
+.score-value {
+  font-size: 2.2em;
+  font-weight: bold;
+  color: #1a73e8; /* A nice blue color */
+  line-height: 1.1;
+}
+
+.score-unit {
+  font-size: 0.5em;
+  font-weight: normal;
+  margin-left: 4px;
+  color: #333;
+}
+
+/* Ensure the old .total-time doesn't conflict if it's still used as a fallback */
+.total-time {
+  font-size: 2.2em;
+  font-weight: bold;
+  color: #333;
+  line-height: 1.1;
+  margin-bottom: 4px;
+}
