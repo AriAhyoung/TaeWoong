@@ -17,7 +17,7 @@ function App() {
 
   const handleFindRoute = async () => {
     // This uses the live backend, make sure your ngrok URL is correct
-    const backendUrl = "https://ac9a-121-135-181-73.ngrok-free.app";
+    const backendUrl = "https://3a47-163-152-3-166.ngrok-free.app";
 
     if (startPoint && destinationPoint) {
       setIsLoading(true);
