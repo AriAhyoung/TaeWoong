@@ -16,49 +16,59 @@ function App() {
   const [routePreference, setRoutePreference] = useState("overall");
 
   const handleFindRoute = async () => {
+    // This uses the live backend, make sure your ngrok URL is correct
+    const backendUrl = "https://ac9a-121-135-181-73.ngrok-free.app";
+
     if (startPoint && destinationPoint) {
       setIsLoading(true);
       setRouteOptions([]);
       setSelectedRouteId(null);
-      console.log(`Searching for routes from ${startPoint} to ${destinationPoint}`);
-
-      // Make sure this URL is your currently active ngrok URL
-      const backendUrl = "https://ac9a-121-135-181-73.ngrok-free.app";
 
       try {
         const response = await fetch(`${backendUrl}/api/find-routes`, {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            startPoint: startPoint,
-            destinationPoint: destinationPoint,
+            startPoint,
+            destinationPoint,
             preference: routePreference,
-            hasRestroom: hasRestroom,
-            hasElevator: hasElevator,
+            hasRestroom,
+            hasElevator,
           }),
         });
 
         if (!response.ok) {
-          throw new Error(`The server responded with an error: ${response.status}`);
+          throw new Error(`Server error: ${response.status}`);
         }
 
         const fetchedRoutes = await response.json();
-        if (fetchedRoutes && fetchedRoutes.length > 0) {
-          setRouteOptions(fetchedRoutes);
-          setSelectedRouteId(fetchedRoutes[0].id);
+
+        // This selects the correct list of routes based on the preference
+        const preferenceMap = {
+          comfort: "top_pleasant",
+          transfer_convenience: "top_transfer_convenience",
+          stability: "top_punctual",
+          least_congestion: "top_congestions",
+          least_time: "routes_time_sorted",
+          overall: "routes_time_sorted",
+        };
+        const resultKey = preferenceMap[routePreference] || "routes_time_sorted";
+        const routesToShow = fetchedRoutes[resultKey] || [];
+
+        if (routesToShow.length > 0) {
+          setRouteOptions(routesToShow);
+          setSelectedRouteId(routesToShow[0].id);
         } else {
-          alert("No routes were found for the specified locations.");
+          alert("No routes found.");
         }
       } catch (error) {
         console.error("Error fetching routes:", error);
-        alert(`Could not find routes. Please make sure the backend server is running and the URL is correct. Error: ${error.message}`);
+        alert(`Failed to fetch routes. Please check the backend server. Error: ${error.message}`);
       } finally {
         setIsLoading(false);
       }
     } else {
-      alert("Please enter both start and destination points.");
+      alert("Please enter a start and destination.");
     }
   };
 
@@ -67,9 +77,8 @@ function App() {
   };
 
   const handleReverse = () => {
-    const tempStart = startPoint;
     setStartPoint(destinationPoint);
-    setDestinationPoint(tempStart);
+    setDestinationPoint(startPoint);
   };
 
   const currentSelectedRoute = routeOptions.find((route) => route.id === selectedRouteId);

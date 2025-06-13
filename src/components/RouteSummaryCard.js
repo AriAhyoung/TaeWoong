@@ -3,7 +3,6 @@ import React from "react";
 const getSegmentIcon = (type) => {
   if (type === "walk") return "🚶";
   if (type === "subway") return "🚇";
-  if (type === "bus") return "🚌";
   if (type === "transfer") return "→";
   return "●";
 };
@@ -24,7 +23,7 @@ function RouteSummaryCard({ route, rank, onRouteSelect, isSelected }) {
         <div className="card-main-info">
           <span className="total-time">{route.totalTime}분</span>
           <span className="meta-info">
-            {route.totalDistance}km | {route.fare.toLocaleString()}원
+            총 {route.totalTime}분 | {route.totalDistance}km | {route.fare.toLocaleString()}원
           </span>
         </div>
         <div className="route-segments">
