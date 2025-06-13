@@ -1,9 +1,7 @@
-// src/components/ResultsPanel.js
-
 import React from "react";
 import RouteSummaryCard from "./RouteSummaryCard";
 
-// THIS IS THE CHANGE: Accept routePreference as a prop
+// This component must accept `routePreference` and pass it to the card
 function ResultsPanel({ routeOptions, startPoint, destinationPoint, selectedRouteId, onRouteSelect, routePreference }) {
   if (!routeOptions || routeOptions.length === 0) {
     return (
@@ -28,7 +26,7 @@ function ResultsPanel({ routeOptions, startPoint, destinationPoint, selectedRout
             rank={index + 1}
             onRouteSelect={onRouteSelect}
             isSelected={selectedRouteId === route.id}
-            // THIS IS THE CHANGE: Pass the prop down to the card
+            // This passes the selected preference down to the card
             routePreference={routePreference}
           />
         ))}
