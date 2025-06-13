@@ -6,6 +6,7 @@ import DetailedPathView from "./components/DetailedPathView";
 import Header from "./components/Header";
 import ResultsPanel from "./components/ResultsPanel";
 import MapPanel from "./components/MapPanel";
+import { mockRouteData } from "./mockData"; // Import the hardcoded data
 
 function App() {
   const [hasRestroom, setHasRestroom] = useState(false);
@@ -18,50 +19,20 @@ function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [routePreference, setRoutePreference] = useState("overall");
 
-  const handleFindRoute = async () => {
+  // This function now uses the hardcoded mockData instead of fetching from a server
+  const handleFindRoute = () => {
     if (startPoint && destinationPoint) {
+      console.log(`Displaying hardcoded results for preference: ${routePreference}`);
       setIsLoading(true);
-      setRouteOptions([]);
-      setSelectedRouteId(null);
-      console.log(`Searching for routes from ${startPoint} to ${destinationPoint}`);
+      setRouteOptions([]); // Clear previous results
 
-      const backendUrl = "https://ac9a-121-135-181-73.ngrok-free.app";
-
-      try {
-        const response = await fetch(`${backendUrl}/api/find-routes`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            startPoint: startPoint,
-            destinationPoint: destinationPoint,
-            preference: routePreference,
-            hasRestroom: hasRestroom,
-            hasElevator: hasElevator,
-          }),
-        });
-
-        if (!response.ok) {
-          throw new Error(`The server responded with an error: ${response.status}`);
-        }
-
-        const fetchedRoutes = await response.json();
-        console.log("--- DATA RECEIVED FROM BACKEND ---");
-        console.log(JSON.stringify(fetchedRoutes, null, 2));
-        if (fetchedRoutes && fetchedRoutes.length > 0) {
-          setRouteOptions(fetchedRoutes);
-          setSelectedRouteId(fetchedRoutes[0].id);
-        } else {
-          alert("No routes were found for the specified locations.");
-        }
-      } catch (error) {
-        console.error("Error fetching routes:", error);
-        alert(`Could not find routes. Please make sure the backend server is running and the URL is correct. Error: ${error.message}`);
-      } finally {
+      // Simulate a network delay
+      setTimeout(() => {
+        const dataToShow = mockRouteData[routePreference] || [];
+        setRouteOptions(dataToShow);
+        setSelectedRouteId(dataToShow.length > 0 ? dataToShow[0].id : null);
         setIsLoading(false);
-        setShowDetailedView(false);
-      }
+      }, 500);
     } else {
       alert("Please enter both start and destination points.");
     }
@@ -85,6 +56,7 @@ function App() {
     setStartPoint(destinationPoint);
     setDestinationPoint(tempStart);
   };
+
   const currentSelectedRoute = routeOptions.find((route) => route.id === selectedRouteId);
 
   return (
@@ -107,19 +79,20 @@ function App() {
       {isLoading && <div className="loading-indicator">Finding routes...</div>}
 
       <main className="main-content-area">
-        {/* THIS IS THE CHANGE: Pass routePreference to ResultsPanel */}
         <ResultsPanel
           routeOptions={routeOptions}
+          startPoint={startPoint}
+          destinationPoint={destinationPoint}
           selectedRouteId={selectedRouteId}
           onRouteSelect={handleRouteSelect}
           showDetailedView={showDetailedView}
           onShowDetailedView={handleShowDetailedView}
           onBackToOptions={handleBackToOptions}
           currentSelectedRoute={currentSelectedRoute}
-          routePreference={routePreference}
         />
-        <MapPanel selectedRoute={currentSelectedRoute} />
-        <DetailedPathView selectedRoute={currentSelectedRoute} />
+        {/* The map and detailed views will be empty with this mock data */}
+        <MapPanel selectedRoute={null} />
+        <DetailedPathView selectedRoute={null} />
       </main>
     </div>
   );
