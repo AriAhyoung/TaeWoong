@@ -1,3 +1,5 @@
+// frontend/src/App.js (Final Corrected Version)
+
 import React, { useState } from "react";
 import "./App.css";
 import DetailedPathView from "./components/DetailedPathView";
@@ -44,15 +46,15 @@ function App() {
         const fetchedRoutesObject = await response.json();
 
         // --- THIS IS THE CORRECTED LOGIC ---
-        // It correctly looks inside the object returned by the server
-        // and selects the right list of routes based on the user's preference.
+        // This correctly reads the object from the server and selects the list
+        // of routes that matches the user's selected preference.
         const preferenceMap = {
           comfort: "top_pleasant",
           transfer_convenience: "top_transfer_convenience",
           stability: "top_punctual",
           least_congestion: "top_congestions",
           least_time: "routes_time_sorted",
-          overall: "routes_time_sorted",
+          overall: "routes_time_sorted", // Default to time-sorted for 'overall'
         };
         const resultKey = preferenceMap[routePreference];
         const routesToShow = fetchedRoutesObject[resultKey] || [];
@@ -62,7 +64,7 @@ function App() {
           setRouteOptions(routesToShow);
           setSelectedRouteId(routesToShow[0].id);
         } else {
-          alert("No routes found.");
+          alert("No routes found for this preference.");
         }
       } catch (error) {
         console.error("Error fetching routes:", error);
