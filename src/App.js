@@ -8,27 +8,23 @@ import ResultsPanel from "./components/ResultsPanel";
 import MapPanel from "./components/MapPanel";
 
 function App() {
-  // --- State Variables ---
-  const [hasRestroom, setHasRestroom] = useState(false); // State for "화장실"
-  const [hasElevator, setHasElevator] = useState(false); // State for "엘리베이터"
+  const [hasRestroom, setHasRestroom] = useState(false);
+  const [hasElevator, setHasElevator] = useState(false);
   const [startPoint, setStartPoint] = useState("");
   const [destinationPoint, setDestinationPoint] = useState("");
-  const [routeOptions, setRouteOptions] = useState([]); // Array of 3 route objects
-  const [selectedRouteId, setSelectedRouteId] = useState(null); // ID of the currently active route
-  const [showDetailedView, setShowDetailedView] = useState(false); // To toggle between summary/detail view
-
-  // --- CHANGE 1: ADD THIS NEW STATE VARIABLE ---
+  const [routeOptions, setRouteOptions] = useState([]);
+  const [selectedRouteId, setSelectedRouteId] = useState(null);
+  const [showDetailedView, setShowDetailedView] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [routePreference, setRoutePreference] = useState("overall");
 
-  // --- CHANGE 2: REPLACE THE OLD handleFindRoute WITH THIS NEW ONE ---
   const handleFindRoute = async () => {
     if (startPoint && destinationPoint) {
-      setIsLoading(true); // Show a loading message
-      setRouteOptions([]); // Clear previous results
+      setIsLoading(true);
+      setRouteOptions([]);
       setSelectedRouteId(null);
       console.log(`Searching for routes from ${startPoint} to ${destinationPoint}`);
 
-      // --- IMPORTANT: PASTE YOUR NGROK URL HERE ---
       const backendUrl = "https://ac9a-121-135-181-73.ngrok-free.app";
 
       try {
@@ -41,8 +37,8 @@ function App() {
             startPoint: startPoint,
             destinationPoint: destinationPoint,
             preference: routePreference,
-            hasRestroom: hasRestroom, // Add restroom preference
-            hasElevator: hasElevator, // Add elevator preference
+            hasRestroom: hasRestroom,
+            hasElevator: hasElevator,
           }),
         });
 
@@ -63,14 +59,13 @@ function App() {
         console.error("Error fetching routes:", error);
         alert(`Could not find routes. Please make sure the backend server is running and the URL is correct. Error: ${error.message}`);
       } finally {
-        setIsLoading(false); // Hide the loading message
+        setIsLoading(false);
         setShowDetailedView(false);
       }
     } else {
       alert("Please enter both start and destination points.");
     }
   };
-  const [routePreference, setRoutePreference] = useState("overall"); // Default to '종합 만족도 순'
 
   const handleRouteSelect = (routeId) => {
     setSelectedRouteId(routeId);
@@ -109,10 +104,10 @@ function App() {
         setHasElevator={setHasElevator}
       />
 
-      {/* --- CHANGE 3: ADD THE LOADING INDICATOR HERE --- */}
       {isLoading && <div className="loading-indicator">Finding routes...</div>}
 
       <main className="main-content-area">
+        {/* THIS IS THE CHANGE: Pass routePreference to ResultsPanel */}
         <ResultsPanel
           routeOptions={routeOptions}
           selectedRouteId={selectedRouteId}
@@ -121,6 +116,7 @@ function App() {
           onShowDetailedView={handleShowDetailedView}
           onBackToOptions={handleBackToOptions}
           currentSelectedRoute={currentSelectedRoute}
+          routePreference={routePreference}
         />
         <MapPanel selectedRoute={currentSelectedRoute} />
         <DetailedPathView selectedRoute={currentSelectedRoute} />
