@@ -8,7 +8,6 @@ const getSegmentIcon = (type) => {
   return "●";
 };
 
-// The component now uses the `routePreference` prop to decide what to display
 function RouteSummaryCard({ route, rank, onRouteSelect, isSelected, routePreference }) {
   if (!route) {
     return null;
@@ -30,40 +29,51 @@ function RouteSummaryCard({ route, rank, onRouteSelect, isSelected, routePrefere
     },
     stability: {
       label: "안정성 점수",
-      value: route.scores?.stability?.toFixed(2),
+      value: route.scores?.stability,
       unit: "점",
     },
     transfer_convenience: {
       label: "환승 편의성",
-      value: route.scores?.transfer_convenience?.toFixed(3),
+      value: route.scores?.transfer_convenience,
       unit: "점",
     },
     least_congestion: {
       label: "평균 혼잡도",
-      value: route.scores?.least_congestion?.toFixed(2),
+      value: route.scores?.least_congestion,
       unit: "점",
     },
     comfort: {
       label: "쾌적도 점수",
-      value: route.scores?.comfort?.toFixed(2),
+      value: route.scores?.comfort,
       unit: "점",
     },
   };
 
-  const displayScore = scoreConfig[routePreference];
-
   const renderMainScore = () => {
-    // Fallback to total time if the specific score isn't available
-    if (!displayScore || displayScore.value === undefined || displayScore.value === null) {
+    const scoreInfo = scoreConfig[routePreference];
+
+    // Check if score information and its value exist and are not null/undefined
+    if (!scoreInfo || scoreInfo.value == null) {
       return <span className="total-time">{route.totalTime}분</span>;
     }
 
+    const valueAsNumber = Number(scoreInfo.value);
+
+    // Check if the conversion to a number was successful. If not, fallback to time.
+    if (isNaN(valueAsNumber)) {
+      return <span className="total-time">{route.totalTime}분</span>;
+    }
+
+    // Determine decimal points based on the unit (0 for minutes, 2 for scores)
+    const decimalPoints = scoreInfo.unit === "분" ? 0 : 2;
+    const formattedValue = valueAsNumber.toFixed(decimalPoints);
+
     return (
       <div className="main-score-display">
-        <span className="score-label">{displayScore.label}</span>
+        <span className="score-label">{scoreInfo.label}</span>
         <span className="score-value">
-          {displayScore.value}
-          <span className="score-unit">{displayScore.unit}</span>
+          {formattedValue}
+          <span className="score-unit">{scoreInfo.unit}</span>
         </span>
       </div>
     );
@@ -76,10 +86,7 @@ function RouteSummaryCard({ route, rank, onRouteSelect, isSelected, routePrefere
       </div>
       <div className="card-content">
         <div className="card-main-info">
-          {/* This block now renders the dynamic score instead of just the time */}
           {renderMainScore()}
-
-          {/* The total time, distance, and fare are now on the secondary line */}
           <span className="meta-info">
             총 {route.totalTime}분 | {route.totalDistance}km | {route.fare.toLocaleString()}원
           </span>
