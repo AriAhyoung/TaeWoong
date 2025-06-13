@@ -16,8 +16,8 @@ function App() {
   const [routePreference, setRoutePreference] = useState("overall");
 
   const handleFindRoute = async () => {
-    // This uses the live backend, make sure your ngrok URL is correct
-    const backendUrl = "https://3a47-163-152-3-166.ngrok-free.app";
+    // Make sure this URL is your currently active ngrok URL
+    const backendUrl = "https://ac9a-121-135-181-73.ngrok-free.app";
 
     if (startPoint && destinationPoint) {
       setIsLoading(true);
@@ -41,25 +41,27 @@ function App() {
           throw new Error(`Server error: ${response.status}`);
         }
 
-        const fetchedRoutes = await response.json();
+        const fetchedRoutesObject = await response.json();
 
-        // This selects the correct list of routes based on the preference
+        // --- THIS IS THE CORRECTED LOGIC ---
+        // This selects the correct list of routes from the object the backend sends
         const preferenceMap = {
           comfort: "top_pleasant",
           transfer_convenience: "top_transfer_convenience",
           stability: "top_punctual",
           least_congestion: "top_congestions",
           least_time: "routes_time_sorted",
-          overall: "routes_time_sorted",
+          overall: "routes_time_sorted", // Default to time-sorted for 'overall'
         };
-        const resultKey = preferenceMap[routePreference] || "routes_time_sorted";
-        const routesToShow = fetchedRoutes[resultKey] || [];
+        const resultKey = preferenceMap[routePreference];
+        const routesToShow = fetchedRoutesObject[resultKey] || [];
+        // --- END OF CORRECTION ---
 
         if (routesToShow.length > 0) {
           setRouteOptions(routesToShow);
           setSelectedRouteId(routesToShow[0].id);
         } else {
-          alert("No routes found.");
+          alert("No routes were found for this preference.");
         }
       } catch (error) {
         console.error("Error fetching routes:", error);
