@@ -7,46 +7,12 @@ const getSegmentIcon = (type) => {
   return "●";
 };
 
-function RouteSummaryCard({ route, rank, onRouteSelect, isSelected, routePreference }) {
+function RouteSummaryCard({ route, rank, onRouteSelect, isSelected }) {
   if (!route) {
     return null;
   }
 
   const cardClassName = `route-summary-card ${isSelected ? "selected" : ""}`;
-
-  // This object maps the preference key to a displayable label and the correct score data
-  const scoreConfig = {
-    least_time: { label: "", value: route.totalTime, unit: "분" },
-    stability: { label: "안정성", value: route.scores?.stability, unit: "" },
-    transfer_convenience: { label: "환승편의성", value: route.scores?.transfer_convenience, unit: "" },
-    least_congestion: { label: "혼잡도", value: route.scores?.least_congestion, unit: "" },
-    comfort: { label: "쾌적도", value: route.scores?.comfort, unit: "" },
-    overall: { label: "", value: route.totalTime, unit: "분" },
-  };
-
-  const renderMainDisplay = () => {
-    const scoreInfo = scoreConfig[routePreference] || scoreConfig.least_time;
-    const value = scoreInfo.value;
-
-    if (value == null || isNaN(Number(value))) {
-      return <span className="total-time">{route.totalTime}분</span>;
-    }
-
-    const decimalPoints = routePreference === "transfer_convenience" ? 2 : 1;
-    const formattedValue = Number(value).toFixed(decimalPoints);
-
-    if (routePreference === "least_time" || routePreference === "overall") {
-      return <span className="total-time">{route.totalTime}분</span>;
-    }
-
-    return (
-      <div className="main-score-display">
-        <span className="score-value">
-          {scoreInfo.label} {formattedValue}
-        </span>
-      </div>
-    );
-  };
 
   return (
     <div className={cardClassName} onClick={() => onRouteSelect(route.id)}>
@@ -55,9 +21,9 @@ function RouteSummaryCard({ route, rank, onRouteSelect, isSelected, routePrefere
       </div>
       <div className="card-content">
         <div className="card-main-info">
-          {renderMainDisplay()}
+          <span className="total-time">{route.totalTime}분</span>
           <span className="meta-info">
-            시간 {route.totalTime}분 | 환승 {route.transfers || "N/A"}회
+            총 {route.totalTime}분 | {route.totalDistance}km | {route.fare.toLocaleString()}원
           </span>
         </div>
         <div className="route-segments">
