@@ -44,14 +44,15 @@ function App() {
         const fetchedRoutesObject = await response.json();
 
         // --- THIS IS THE CORRECTED LOGIC ---
-        // This selects the correct list of routes from the object the backend sends
+        // It correctly looks inside the object returned by the server
+        // and selects the right list of routes based on the user's preference.
         const preferenceMap = {
           comfort: "top_pleasant",
           transfer_convenience: "top_transfer_convenience",
           stability: "top_punctual",
           least_congestion: "top_congestions",
           least_time: "routes_time_sorted",
-          overall: "routes_time_sorted", // Default to time-sorted for 'overall'
+          overall: "routes_time_sorted",
         };
         const resultKey = preferenceMap[routePreference];
         const routesToShow = fetchedRoutesObject[resultKey] || [];
@@ -61,7 +62,7 @@ function App() {
           setRouteOptions(routesToShow);
           setSelectedRouteId(routesToShow[0].id);
         } else {
-          alert("No routes were found for this preference.");
+          alert("No routes found.");
         }
       } catch (error) {
         console.error("Error fetching routes:", error);
