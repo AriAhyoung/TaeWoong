@@ -18,41 +18,50 @@ function RouteSummaryCard({ route, rank, onRouteSelect, isSelected, routePrefere
 
   const cardClassName = `route-summary-card ${isSelected ? "selected" : ""}`;
 
-  // This object maps the preference key to a displayable label and the correct score data
-  const scoreConfig = {
-    overall: { label: "총 소요시간", value: route.totalTime, unit: "분" },
-    least_time: { label: "최소 시간", value: route.totalTime, unit: "분" },
-    stability: { label: "안정성", value: route.scores?.stability, unit: "점" },
-    transfer_convenience: { label: "환승편의성", value: route.scores?.transfer_convenience, unit: "" },
-    least_congestion: { label: "혼잡도", value: route.scores?.least_congestion, unit: "점" },
-    comfort: { label: "쾌적도", value: route.scores?.comfort, unit: "점" },
-  };
+  // This function will now return a hardcoded label and the route's main score/time
+  const renderMainDisplay = () => {
+    let label = "총 소요시간";
+    let value = route.totalTime;
+    let unit = "분";
 
-  const renderMainScore = () => {
-    const scoreInfo = scoreConfig[routePreference] || scoreConfig.overall;
+    // This switch statement sets the correct label and value based on the selected option
+    switch (routePreference) {
+      case "least_congestion":
+        label = "혼잡도";
+        value = route.scores?.least_congestion;
+        unit = ""; // The unit is part of the score name
+        break;
+      case "stability":
+        label = "안정성";
+        value = route.scores?.stability;
+        unit = "";
+        break;
+      case "comfort":
+        label = "쾌적도";
+        value = route.scores?.comfort;
+        unit = "";
+        break;
+      case "transfer_convenience":
+        label = "환승편의성";
+        value = route.scores?.transfer_convenience;
+        unit = "";
+        break;
+      default: // 'least_time' and 'overall' will use the default time display
+        break;
+    }
 
-    // Check if the score value exists and is a valid number
-    if (scoreInfo.value == null || isNaN(Number(scoreInfo.value))) {
-      // Fallback to total time if score is missing or not a number
+    // Format the value safely
+    const formattedValue =
+      value != null && !isNaN(Number(value)) ? Number(value).toFixed(routePreference === "transfer_convenience" ? 2 : 1) : route.totalTime; // Fallback to time if score is invalid
+
+    if (routePreference === "least_time" || routePreference === "overall") {
       return <span className="total-time">{route.totalTime}분</span>;
     }
 
-    // Format the number. 0 decimals for time, 2 for scores, 3 for transfer convenience.
-    let decimalPoints = 2;
-    if (routePreference === "least_time" || routePreference === "overall") {
-      decimalPoints = 0;
-    } else if (routePreference === "transfer_convenience") {
-      decimalPoints = 2; // Show more precision for transfer score
-    }
-
-    const formattedValue = Number(scoreInfo.value).toFixed(decimalPoints);
-
     return (
       <div className="main-score-display">
-        <span className="score-label">{scoreInfo.label}</span>
         <span className="score-value">
-          {formattedValue}
-          <span className="score-unit">{scoreInfo.unit}</span>
+          {label} {formattedValue}
         </span>
       </div>
     );
@@ -65,11 +74,9 @@ function RouteSummaryCard({ route, rank, onRouteSelect, isSelected, routePrefere
       </div>
       <div className="card-content">
         <div className="card-main-info">
-          {renderMainScore()}
+          {renderMainDisplay()}
           <span className="meta-info">
-            {/* Display total time here if it's not the main score */}
-            {routePreference !== "least_time" && routePreference !== "overall" && `시간 ${route.totalTime}분 | `}
-            {route.totalDistance}km | {route.fare.toLocaleString()}원
+            시간 {route.totalTime}분 | {route.totalDistance}km | {route.fare.toLocaleString()}원
           </span>
         </div>
         <div className="route-segments">
