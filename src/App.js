@@ -6,6 +6,7 @@ import ResultsPanel from "./components/ResultsPanel";
 import MapPanel from "./components/MapPanel";
 
 function App() {
+  // ... (all your existing state variables like startPoint, routeOptions, etc.)
   const [hasRestroom, setHasRestroom] = useState(false);
   const [hasElevator, setHasElevator] = useState(false);
   const [startPoint, setStartPoint] = useState("");
@@ -16,8 +17,7 @@ function App() {
   const [routePreference, setRoutePreference] = useState("overall");
 
   const handleFindRoute = async () => {
-    // This uses the live backend, make sure your ngrok URL is correct
-    const backendUrl = "https://ac9a-121-135-181-73.ngrok-free.app";
+    const backendUrl = "https://ac9a-121-135-181-73.ngrok-free.app"; // Your ngrok URL
 
     if (startPoint && destinationPoint) {
       setIsLoading(true);
@@ -32,18 +32,12 @@ function App() {
             startPoint,
             destinationPoint,
             preference: routePreference,
-            hasRestroom,
-            hasElevator,
           }),
         });
 
-        if (!response.ok) {
-          throw new Error(`Server error: ${response.status}`);
-        }
+        if (!response.ok) throw new Error(`Server error: ${response.status}`);
 
         const fetchedRoutes = await response.json();
-
-        // This selects the correct list of routes based on the preference
         const preferenceMap = {
           comfort: "top_pleasant",
           transfer_convenience: "top_transfer_convenience",
@@ -63,7 +57,7 @@ function App() {
         }
       } catch (error) {
         console.error("Error fetching routes:", error);
-        alert(`Failed to fetch routes. Please check the backend server. Error: ${error.message}`);
+        alert(`Failed to fetch routes. Error: ${error.message}`);
       } finally {
         setIsLoading(false);
       }
@@ -72,15 +66,11 @@ function App() {
     }
   };
 
-  const handleRouteSelect = (routeId) => {
-    setSelectedRouteId(routeId);
-  };
-
+  const handleRouteSelect = (routeId) => setSelectedRouteId(routeId);
   const handleReverse = () => {
     setStartPoint(destinationPoint);
     setDestinationPoint(startPoint);
   };
-
   const currentSelectedRoute = routeOptions.find((route) => route.id === selectedRouteId);
 
   return (
@@ -99,16 +89,16 @@ function App() {
         hasElevator={hasElevator}
         setHasElevator={setHasElevator}
       />
-
       {isLoading && <div className="loading-indicator">Finding routes...</div>}
-
       <main className="main-content-area">
+        {/* CHANGE: Pass routePreference to ResultsPanel */}
         <ResultsPanel
           routeOptions={routeOptions}
           startPoint={startPoint}
           destinationPoint={destinationPoint}
           selectedRouteId={selectedRouteId}
           onRouteSelect={handleRouteSelect}
+          routePreference={routePreference}
         />
         <MapPanel selectedRoute={currentSelectedRoute} />
         <DetailedPathView selectedRoute={currentSelectedRoute} />

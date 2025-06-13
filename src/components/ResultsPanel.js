@@ -1,7 +1,8 @@
 import React from "react";
 import RouteSummaryCard from "./RouteSummaryCard";
 
-function ResultsPanel({ routeOptions, startPoint, destinationPoint, selectedRouteId, onRouteSelect }) {
+// CHANGE: Accept routePreference as a prop
+function ResultsPanel({ routeOptions, startPoint, destinationPoint, selectedRouteId, onRouteSelect, routePreference }) {
   if (!routeOptions || routeOptions.length === 0) {
     return (
       <aside className="results-panel">
@@ -25,6 +26,8 @@ function ResultsPanel({ routeOptions, startPoint, destinationPoint, selectedRout
             rank={index + 1}
             onRouteSelect={onRouteSelect}
             isSelected={selectedRouteId === route.id}
+            // CHANGE: Pass the prop down to the card
+            routePreference={routePreference}
           />
         ))}
       </div>
